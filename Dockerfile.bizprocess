@@ -12,6 +12,4 @@ ENV PYTHONPATH=/app/src
 RUN adduser --disabled-password agent
 USER agent
 
-ENTRYPOINT ["python", "src/server_bizprocess.py"]
-CMD ["--host", "0.0.0.0", "--port", "9009"]
 EXPOSE 9009
