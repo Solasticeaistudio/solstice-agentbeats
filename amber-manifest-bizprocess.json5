@@ -19,7 +19,7 @@
   slots: {},
 
   program: {
-    image: "ghcr.io/solasticeaistudio/solstice-bizprocess-agent:latest",
+    image: "ghcr.io/solasticeaistudio/solstice-agentbeats:bizprocess-latest",
     entrypoint: "uv run src/server_bizprocess.py --host 0.0.0.0 --port 9009",
     env: {
       OPENAI_API_KEY:         "${config.openai_api_key}",

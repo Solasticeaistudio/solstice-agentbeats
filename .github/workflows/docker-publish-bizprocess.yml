@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: solasticeaistudio/solstice-bizprocess-agent
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build-and-push:
@@ -27,21 +27,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=raw,value=latest
-            type=sha
-
       - name: Build and push BizProcess Agent
         uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile.bizprocess
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:bizprocess-latest
           platforms: linux/amd64
