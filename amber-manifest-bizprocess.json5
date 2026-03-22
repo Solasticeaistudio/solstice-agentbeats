@@ -12,7 +12,7 @@
       pinecone_api_key:  { type: "string", secret: true },
       agentbeats_llm_model: { type: "string" },
     },
-    required: ["openai_api_key"],
+    required: ["google_api_key"],
     additionalProperties: false,
   },
 

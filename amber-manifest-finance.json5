@@ -13,7 +13,7 @@
       // Optional: override default model (e.g. "gemini/gemini-2.5-flash")
       agentbeats_llm_model: { type: "string" },
     },
-    required: ["openai_api_key"],
+    required: ["google_api_key"],
     additionalProperties: false,
   },
 
