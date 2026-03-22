@@ -1,0 +1,54 @@
+name: Build and Push BizProcess Agent
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'agentbeats/**'
+      - 'services/llm_service.py'
+      - 'services/retrieval_service.py'
+      - 'services/agent_orchestrator.py'
+      - 'services/embedding_service.py'
+      - 'agents/plutus.py'
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: solasticeaistudio/solstice-bizprocess-agent
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=sha
+
+      - name: Build and push BizProcess Agent Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: agentbeats/Dockerfile.bizprocess
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64

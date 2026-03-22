@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  finance-agent:
+    build:
+      context: ..
+      dockerfile: agentbeats/Dockerfile.finance
+    ports:
+      - "9009:9009"
+    env_file: .env
+    environment:
+      - AGENTBEATS_LLM_MODEL=openai/gpt-4.1
+
+  bizprocess-agent:
+    build:
+      context: ..
+      dockerfile: agentbeats/Dockerfile.bizprocess
+    ports:
+      - "9019:9009"
+    env_file: .env
+    environment:
+      - AGENTBEATS_LLM_MODEL=openai/gpt-4.1

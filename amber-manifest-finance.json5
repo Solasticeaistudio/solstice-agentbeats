@@ -1,0 +1,39 @@
+{
+  // Amber manifest for Solstice Finance Agent (AgentBeats Phase 2 Sprint 1)
+  // Replace solasticeaistudio with your actual GitHub username before Quick Submit
+  manifest_version: "0.1.0",
+
+  config_schema: {
+    type: "object",
+    properties: {
+      openai_api_key:    { type: "string", secret: true },
+      google_api_key:    { type: "string", secret: true },
+      anthropic_api_key: { type: "string", secret: true },
+      pinecone_api_key:  { type: "string", secret: true },
+      // Optional: override default model (e.g. "gemini/gemini-2.5-flash")
+      agentbeats_llm_model: { type: "string" },
+    },
+    required: ["openai_api_key"],
+    additionalProperties: false,
+  },
+
+  slots: {},
+
+  program: {
+    image: "ghcr.io/solasticeaistudio/solstice-finance-agent:latest",
+    entrypoint: "uv run src/server_finance.py --host 0.0.0.0 --port 9009",
+    env: {
+      OPENAI_API_KEY:         "${config.openai_api_key}",
+      GOOGLE_API_KEY:         "${config.google_api_key}",
+      ANTHROPIC_API_KEY:      "${config.anthropic_api_key}",
+      PINECONE_API_KEY:       "${config.pinecone_api_key}",
+      AGENTBEATS_LLM_MODEL:   "${config.agentbeats_llm_model}",
+    },
+    network: {
+      endpoints: [{ name: "a2a_endpoint", port: 9009 }],
+    },
+  },
+
+  provides: { a2a: { kind: "a2a", endpoint: "a2a_endpoint" } },
+  exports:  { a2a: "a2a" },
+}
