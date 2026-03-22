@@ -1,22 +1,20 @@
 # Solstice Business Process Agent — AgentBeats Phase 2
 # Standalone build (litellm fallback when Solstice stack unavailable)
 
-FROM ghcr.io/astral-sh/uv:python3.11-bookworm
-
-ENV UV_HTTP_TIMEOUT=300
+FROM python:3.11-slim
 
 RUN adduser --disabled-password agent
 USER agent
 WORKDIR /home/agent
 
-COPY --chown=agent pyproject.toml README.md* ./
+COPY --chown=agent requirements.txt ./
+RUN pip install --user --no-cache-dir -r requirements.txt
+
 COPY --chown=agent src src
 
 ENV PYTHONPATH=/home/agent/src
+ENV PATH=/home/agent/.local/bin:$PATH
 
-RUN --mount=type=cache,target=/home/agent/.cache/uv,uid=1000 \
-    uv sync --locked --no-dev 2>/dev/null || uv sync --no-dev
-
-ENTRYPOINT ["uv", "run", "src/server_bizprocess.py"]
+ENTRYPOINT ["python", "src/server_bizprocess.py"]
 CMD ["--host", "0.0.0.0", "--port", "9009"]
 EXPOSE 9009
