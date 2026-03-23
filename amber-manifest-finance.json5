@@ -22,8 +22,8 @@
   },
 
   program: {
-    image: "ghcr.io/solasticeaistudio/solstice-agentbeats:finance-v4",
-    entrypoint: "uv run python /home/agent/src/server_finance.py --host 0.0.0.0 --port 9009",
+    image: "ghcr.io/solasticeaistudio/solstice-agentbeats:finance-v5",
+    entrypoint: "/home/agent/.venv/bin/python /home/agent/src/server_finance.py --host 0.0.0.0 --port 9009",
     env: {
       OPENAI_API_KEY:         "${config.openai_api_key}",
       GOOGLE_API_KEY:         "${config.google_api_key}",
