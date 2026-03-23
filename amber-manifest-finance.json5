@@ -28,6 +28,8 @@
       ANTHROPIC_API_KEY:      "${config.anthropic_api_key}",
       PINECONE_API_KEY:       "${config.pinecone_api_key}",
       AGENTBEATS_LLM_MODEL:   "${config.agentbeats_llm_model}",
+      PYTHONPATH:             "/app/src",
+      PYTHONUNBUFFERED:       "1",
     },
     network: {
       endpoints: [{ name: "a2a_endpoint", port: 9009 }],

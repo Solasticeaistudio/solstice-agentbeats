@@ -1,17 +1,22 @@
 # Solstice Finance Agent — AgentBeats Phase 2
-
-FROM ghcr.io/astral-sh/uv:python3.11-bookworm
+FROM python:3.11-slim
 
 ENV PYTHONUNBUFFERED=1
-ENV UV_HTTP_TIMEOUT=300
 
-WORKDIR /home/agent
-
-COPY pyproject.toml uv.lock ./
-RUN uv sync --locked --no-dev
+WORKDIR /app
+COPY pyproject.toml ./
+RUN pip install --no-cache-dir \
+    "a2a-sdk[http-server]>=0.3.20" \
+    "uvicorn>=0.30.0" \
+    "httpx>=0.28.0" \
+    "google-generativeai>=0.3.2" \
+    "anthropic>=0.18.0" \
+    "litellm>=1.30.0" \
+    "python-dotenv>=1.0.0" \
+    "requests>=2.31.0" \
+    "beautifulsoup4>=4.12.0" \
+    "numpy>=1.26.0"
 
 COPY src src
-ENV PYTHONPATH=/home/agent/src
-
-ENTRYPOINT ["/home/agent/.venv/bin/python", "/home/agent/src/server_finance.py", "--host", "0.0.0.0", "--port", "9009"]
+ENV PYTHONPATH=/app/src
 EXPOSE 9009
