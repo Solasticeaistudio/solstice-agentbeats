@@ -33,7 +33,7 @@ jobs:
           context: .
           file: Dockerfile.finance
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:finance-v7
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:finance-v8
           platforms: linux/amd64
 
       - name: Smoke test — start container and curl agent card
@@ -42,7 +42,7 @@ jobs:
             -p 9009:9009 \
             -e GOOGLE_API_KEY=test \
             -e PYTHONUNBUFFERED=1 \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:finance-v7
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:finance-v8
           echo "=== Waiting 15s for server to start ==="
           sleep 15
           echo "=== Container logs ==="
@@ -64,7 +64,7 @@ jobs:
                 "networks": {"testnet": {}}
               },
               "purple": {
-                "image": "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:finance-v7",
+                "image": "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:finance-v8",
                 "network_mode": "service:purple-net",
                 "environment": {
                   "GOOGLE_API_KEY": "test",
