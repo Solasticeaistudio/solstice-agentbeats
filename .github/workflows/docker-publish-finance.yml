@@ -36,6 +36,21 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:finance-v6
           platforms: linux/amd64
 
+      - name: Smoke test — start container and curl agent card
+        run: |
+          docker run -d --name finance-test \
+            -p 9009:9009 \
+            -e GOOGLE_API_KEY=test \
+            -e PYTHONUNBUFFERED=1 \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:finance-v6
+          echo "=== Waiting 15s for server to start ==="
+          sleep 15
+          echo "=== Container logs ==="
+          docker logs finance-test
+          echo "=== Curl agent card ==="
+          curl -sf http://localhost:9009/.well-known/agent.json || echo "CURL FAILED"
+          docker stop finance-test || true
+
       - name: Make Finance image public
         run: |
           curl -s -X PATCH \
