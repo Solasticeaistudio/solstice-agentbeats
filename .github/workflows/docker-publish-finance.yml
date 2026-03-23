@@ -51,6 +51,40 @@ jobs:
           curl -sf http://localhost:9009/.well-known/agent.json || echo "CURL FAILED"
           docker stop finance-test || true
 
+      - name: Smoke test 2 — shared network_mode (simulates amber competition setup)
+        run: |
+          cat > /tmp/test-compose.yml << 'COMPOSEOF'
+          services:
+            purple-net:
+              image: alpine
+              command: sleep infinity
+              networks:
+                testnet: {}
+            purple:
+              image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:finance-v6
+              network_mode: "service:purple-net"
+              environment:
+                GOOGLE_API_KEY: test
+                PYTHONUNBUFFERED: "1"
+                OTEL_TRACES_SAMPLER: always_on
+                OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+                OTEL_EXPORTER_OTLP_ENDPOINT: http://amber-otelcol:4318
+                AMBER_COMPONENT_MONIKER: /
+          networks:
+            testnet: {}
+          COMPOSEOF
+          docker compose -f /tmp/test-compose.yml up -d
+          echo "=== Waiting 20s ==="
+          sleep 20
+          echo "=== Purple agent logs ==="
+          docker compose -f /tmp/test-compose.yml logs purple
+          echo "=== Is port 9009 open inside sidecar namespace? ==="
+          NETID=$(docker compose -f /tmp/test-compose.yml ps -q purple-net)
+          docker exec $NETID sh -c "ss -tlnp 2>/dev/null | grep 9009 || echo 'port 9009 NOT listening'" || true
+          echo "=== Curl from within sidecar namespace ==="
+          docker exec $NETID sh -c "wget -qO- http://localhost:9009/.well-known/agent.json 2>&1 || echo 'CURL FAILED'"
+          docker compose -f /tmp/test-compose.yml down
+
       - name: Make Finance image public
         run: |
           curl -s -X PATCH \
