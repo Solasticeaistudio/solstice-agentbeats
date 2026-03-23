@@ -1,16 +1,25 @@
-# Solstice Business Process Agent — AgentBeats Phase 2
-FROM ghcr.io/astral-sh/uv:python3.11-bookworm
+# Solstice Business Process Agent — AgentBeats Phase 2 (lean image)
+FROM python:3.11-slim
 
 ENV PYTHONUNBUFFERED=1
 
-RUN adduser agent
+RUN useradd -m agent
 USER agent
 WORKDIR /home/agent
 
-COPY --chown=agent:agent pyproject.toml uv.lock ./
 COPY --chown=agent:agent src src
 
-RUN uv sync --locked --no-dev
+RUN pip install --user --no-cache-dir \
+    "a2a-sdk[http-server]" \
+    "uvicorn" \
+    "httpx" \
+    "python-dotenv" \
+    "google-generativeai" \
+    "anthropic" \
+    "litellm"
+
+ENV PATH="/home/agent/.local/bin:$PATH"
+ENV PYTHONPATH="/home/agent/src"
 
 EXPOSE 9009
-ENTRYPOINT ["/home/agent/.venv/bin/python", "/home/agent/src/server_bizprocess.py", "--host", "0.0.0.0", "--port", "9009"]
+ENTRYPOINT ["python", "/home/agent/src/server_bizprocess.py", "--host", "0.0.0.0", "--port", "9009"]

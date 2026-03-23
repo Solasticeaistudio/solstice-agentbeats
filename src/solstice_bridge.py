@@ -429,7 +429,7 @@ class SolsticeBridge:
             messages.extend(history)
         messages.append({"role": "user", "content": prompt})
 
-        model = os.getenv("AGENTBEATS_LLM_MODEL", "openai/gpt-4.1")
+        model = os.getenv("AGENTBEATS_LLM_MODEL", "gemini/gemini-2.0-flash")
         try:
             response = await asyncio.to_thread(
                 litellm.completion,
