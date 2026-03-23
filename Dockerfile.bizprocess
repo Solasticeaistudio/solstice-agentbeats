@@ -7,11 +7,11 @@ ENV UV_HTTP_TIMEOUT=300
 
 WORKDIR /home/agent
 
-COPY pyproject.toml ./
-RUN uv lock && uv sync --no-dev
+COPY pyproject.toml uv.lock ./
+RUN uv sync --locked --no-dev
 
 COPY src src
 ENV PYTHONPATH=/home/agent/src
-ENV PATH="/home/agent/.venv/bin:$PATH"
 
+ENTRYPOINT ["/home/agent/.venv/bin/python", "/home/agent/src/server_bizprocess.py", "--host", "0.0.0.0", "--port", "9009"]
 EXPOSE 9009
