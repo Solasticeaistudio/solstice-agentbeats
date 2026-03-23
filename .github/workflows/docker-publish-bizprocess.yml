@@ -35,3 +35,11 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:bizprocess-latest
           platforms: linux/amd64
+
+      - name: Make BizProcess image public
+        run: |
+          curl -s -X PATCH \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/user/packages/container/solstice-agentbeats" \
+            -d '{"visibility":"public"}' || true
