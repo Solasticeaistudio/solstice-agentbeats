@@ -33,7 +33,7 @@ jobs:
           context: .
           file: Dockerfile.bizprocess
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:bizprocess-v2
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:bizprocess-v3
           platforms: linux/amd64
 
       - name: Make BizProcess image public

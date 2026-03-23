@@ -21,3 +21,4 @@ RUN pip install --no-cache-dir \
 COPY src src
 ENV PYTHONPATH=/app/src
 EXPOSE 9009
+CMD ["python", "/app/src/server_bizprocess.py", "--host", "0.0.0.0", "--port", "9009"]
