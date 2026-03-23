@@ -12,5 +12,6 @@ RUN uv lock && uv sync --no-dev
 
 COPY src src
 ENV PYTHONPATH=/home/agent/src
+ENV PATH="/home/agent/.venv/bin:$PATH"
 
 EXPOSE 9009

@@ -20,7 +20,7 @@
 
   program: {
     image: "ghcr.io/solasticeaistudio/solstice-agentbeats:bizprocess-latest",
-    entrypoint: "uv run python src/server_bizprocess.py --host 0.0.0.0 --port 9009",
+    entrypoint: "/home/agent/.venv/bin/python src/server_bizprocess.py --host 0.0.0.0 --port 9009",
     env: {
       OPENAI_API_KEY:         "${config.openai_api_key}",
       GOOGLE_API_KEY:         "${config.google_api_key}",
