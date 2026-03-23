@@ -33,7 +33,7 @@ jobs:
           context: .
           file: Dockerfile.finance
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:finance-latest
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:finance-v2
           platforms: linux/amd64
 
       - name: Make Finance image public
