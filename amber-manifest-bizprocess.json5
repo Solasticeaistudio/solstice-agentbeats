@@ -16,7 +16,9 @@
     additionalProperties: false,
   },
 
-  slots: {},
+  slots: {
+    proxy: { kind: "a2a", optional: true },
+  },
 
   program: {
     image: "ghcr.io/solasticeaistudio/solstice-agentbeats:bizprocess-v3",
