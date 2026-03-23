@@ -1,24 +1,16 @@
 # Solstice Finance Agent — AgentBeats Phase 2
-FROM python:3.11-slim
+FROM ghcr.io/astral-sh/uv:python3.11-bookworm
 
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /app
-COPY pyproject.toml ./
-RUN pip install --no-cache-dir \
-    "a2a-sdk[http-server]>=0.3.20" \
-    "starlette>=0.27.0" \
-    "uvicorn>=0.30.0" \
-    "httpx>=0.28.0" \
-    "google-generativeai>=0.3.2" \
-    "anthropic>=0.18.0" \
-    "litellm>=1.30.0" \
-    "python-dotenv>=1.0.0" \
-    "requests>=2.31.0" \
-    "beautifulsoup4>=4.12.0" \
-    "numpy>=1.26.0"
+RUN adduser agent
+USER agent
+WORKDIR /home/agent
 
-COPY src src
-ENV PYTHONPATH=/app/src
+COPY --chown=agent:agent pyproject.toml uv.lock ./
+COPY --chown=agent:agent src src
+
+RUN uv sync --locked --no-dev
+
 EXPOSE 9009
-CMD ["python", "/app/src/server_finance.py", "--host", "0.0.0.0", "--port", "9009"]
+CMD ["uv", "run", "python", "/home/agent/src/server_finance.py", "--host", "0.0.0.0", "--port", "9009"]
