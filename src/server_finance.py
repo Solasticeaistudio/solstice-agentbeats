@@ -9,6 +9,11 @@ Usage:
     docker run -p 9009:9009 solstice-finance-agent
 """
 
+import sys
+print("SOLSTICE_FINANCE: process started", flush=True)
+sys.stderr.write("SOLSTICE_FINANCE: process started (stderr)\n")
+sys.stderr.flush()
+
 import argparse
 import logging
 import sys
