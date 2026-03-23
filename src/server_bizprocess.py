@@ -11,6 +11,7 @@ Usage:
 
 import argparse
 import logging
+import socket
 import sys
 
 import uvicorn
@@ -36,7 +37,7 @@ def main():
     parser.add_argument("--card-url", type=str, default=None)
     args = parser.parse_args()
 
-    card_url = args.card_url or f"http://{args.host}:{args.port}"
+    card_url = args.card_url or f"http://{socket.gethostname()}:{args.port}"
 
     skills = [
         AgentSkill(
