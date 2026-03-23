@@ -1,15 +1,11 @@
 {
   // Amber manifest for Solstice Business Process Agent (AgentBeats Phase 2 Sprint 1)
-  // Replace solasticeaistudio with your actual GitHub username before Quick Submit
   manifest_version: "0.1.0",
 
   config_schema: {
     type: "object",
     properties: {
-      openai_api_key:    { type: "string", secret: true },
-      google_api_key:    { type: "string", secret: true },
-      anthropic_api_key: { type: "string", secret: true },
-      pinecone_api_key:  { type: "string", secret: true },
+      google_api_key:       { type: "string", secret: true },
       agentbeats_llm_model: { type: "string" },
     },
     required: ["google_api_key"],
@@ -24,13 +20,10 @@
     image: "ghcr.io/solasticeaistudio/solstice-agentbeats:bizprocess-v8",
     entrypoint: "python /home/agent/src/server_bizprocess.py --host 0.0.0.0 --port 9009",
     env: {
-      OPENAI_API_KEY:         "${config.openai_api_key}",
-      GOOGLE_API_KEY:         "${config.google_api_key}",
-      ANTHROPIC_API_KEY:      "${config.anthropic_api_key}",
-      PINECONE_API_KEY:       "${config.pinecone_api_key}",
-      AGENTBEATS_LLM_MODEL:   "${config.agentbeats_llm_model}",
-      PYTHONPATH:             "/home/agent/src",
-      PYTHONUNBUFFERED:       "1",
+      GOOGLE_API_KEY:       "${config.google_api_key}",
+      AGENTBEATS_LLM_MODEL: "${config.agentbeats_llm_model}",
+      PYTHONPATH:           "/home/agent/src",
+      PYTHONUNBUFFERED:     "1",
     },
     network: {
       endpoints: [{ name: "a2a_endpoint", port: 9009 }],
